@@ -1,0 +1,22 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "16.13.0",
+    "sdksVersions": {
+      "@microsoft/microsoft-graph-client": "3.0.2",
+      "@microsoft/teams-js": "2.9.1"
+    },
+    "version": "1.17.4",
+    "libraryName": "field-customizers",
+    "libraryId": "645df6cf-5fc5-49f3-b1b7-1c42b9c5e3a3",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "FieldCustomizers",
+    "solutionShortDescription": "FieldCustomizers description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "extension",
+    "extensionType": "FieldCustomizer"
+  }
+}

@@ -1,0 +1,58 @@
+.approveRejectField {
+  background-color: "[theme:themePrimary, default:#0078d4]";
+  color: "[theme:white, default:#ffffff]";
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.approved{
+  box-sizing: border-box;
+    padding: 4px 8px 5px 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: initial;
+    border-radius: 16px;
+    height: 24px;
+    align-items: center;
+    white-space: nowrap;
+    margin: 4px 4px 4px 4px;
+    background-color: #CAF0CC;
+    color: #437406;
+    border-color: #437406;
+}
+
+
+.rejected{
+  box-sizing: border-box;
+    padding: 4px 8px 5px 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: initial;
+    border-radius: 16px;
+    height: 24px;
+    align-items: center;
+    white-space: nowrap;
+    margin: 4px 4px 4px 4px;
+    background-color: #FED5D1;
+    color: #A0410D;
+    border-color: #A0410D;
+}
+
+.actionButton{
+  box-sizing: border-box;
+    padding: 4px 8px 5px 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: initial;
+    // border-radius: 16px;
+    height: 24px;
+    align-items: center;
+    white-space: nowrap;
+    margin: 4px 4px 4px 4px;
+    color: #FFFFFF;
+    background-color: #0078D3;
+    border-width: 0;
+    :hover{
+      background-color: #1488e0;
+    }
+}

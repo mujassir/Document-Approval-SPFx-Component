@@ -1,0 +1,29 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/spfx-serve.schema.json",
+  "port": 4321,
+  "https": true,
+  "serveConfigurations": {
+    "default": {
+      "pageUrl": "https://4zp2dk.sharepoint.com/sites/SharePointDevelopers/Proposals/Forms/AllItems.aspx",
+      "fieldCustomizers": {
+        "ApprovalStatus": {
+          "id": "df0e4e1c-b9a1-447f-8ba2-f18db13c02b0",
+          "properties": {
+            "sampleText": "Value"
+          }
+        }
+      }
+    },
+    "approveRejectField": {
+      "pageUrl": "https://4zp2dk.sharepoint.com/sites/SharePointDevelopers/Proposals/Forms/AllItems.aspx",
+      "fieldCustomizers": {
+        "InternalFieldName": {
+          "id": "df0e4e1c-b9a1-447f-8ba2-f18db13c02b0",
+          "properties": {
+            "sampleText": "Value"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "approve-reject-field-field-customizer": {
+      "components": [
+        {
+          "entrypoint": "./lib/extensions/approveRejectField/ApproveRejectFieldFieldCustomizer.js",
+          "manifest": "./src/extensions/approveRejectField/ApproveRejectFieldFieldCustomizer.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "ApproveRejectFieldFieldCustomizerStrings": "lib/extensions/approveRejectField/loc/{locale}.js"
+  }
+}
