@@ -4,7 +4,7 @@
   "https": true,
   "serveConfigurations": {
     "default": {
-      "pageUrl": "https://4zp2dk.sharepoint.com/sites/SharePointDevelopers/Proposals/Forms/AllItems.aspx",
+      "pageUrl": "https://4zp2dk.sharepoint.com/sites/SharePointDevelopers/HR%20Documents/Forms/AllItems.aspx",
       "fieldCustomizers": {
         "ApprovalStatus": {
           "id": "df0e4e1c-b9a1-447f-8ba2-f18db13c02b0",
@@ -15,7 +15,7 @@
       }
     },
     "approveRejectField": {
-      "pageUrl": "https://4zp2dk.sharepoint.com/sites/SharePointDevelopers/Proposals/Forms/AllItems.aspx",
+      "pageUrl": "https://4zp2dk.sharepoint.com/sites/SharePointDevelopers/HR%20Documents/Forms/AllItems.aspx",
       "fieldCustomizers": {
         "InternalFieldName": {
           "id": "df0e4e1c-b9a1-447f-8ba2-f18db13c02b0",

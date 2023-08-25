@@ -19,6 +19,7 @@ import ApproveRejectField, { IApproveRejectFieldProps } from './components/Appro
 export interface IApproveRejectFieldFieldCustomizerProperties {
   // This is an example; replace with your own property
   sampleText?: string;
+  configList: any[]
 }
 
 const LOG_SOURCE: string = 'ApproveRejectFieldFieldCustomizer';
@@ -26,7 +27,12 @@ const LOG_SOURCE: string = 'ApproveRejectFieldFieldCustomizer';
 export default class ApproveRejectFieldFieldCustomizer
   extends BaseFieldCustomizer<IApproveRejectFieldFieldCustomizerProperties> {
 
-  public onInit(): Promise<void> {
+  public async onInit(): Promise<void> {
+    try {
+      this.properties.configList = await this._getListData('Document Approval Configuration');
+    } catch (error) {
+      console.error(error);
+    }
     // Add your custom initialization to this method.  The framework will wait
     // for the returned promise to resolve before firing any BaseFieldCustomizer events.
     Log.info(LOG_SOURCE, 'Activated ApproveRejectFieldFieldCustomizer with properties:');
@@ -39,10 +45,19 @@ export default class ApproveRejectFieldFieldCustomizer
     // Use this method to perform your custom cell rendering.
     console.log("listItem: ", event.listItem);
     console.log("Userdata: ", event.userData);
+    const FileRef = event.listItem.getValueByName("FileRef");
     const objectType = event.listItem.getValueByName("FSObjType");
     const listItemId = event.listItem.getValueByName("ID");
+    
     const approveRejectField: React.ReactElement<{}> =
-      React.createElement(ApproveRejectField, { objectType, itemId: listItemId, fieldValue: event.fieldValue } as IApproveRejectFieldProps);
+      React.createElement(ApproveRejectField, { 
+        objectType,
+        itemId: listItemId,
+        fileRef: FileRef,
+        fieldValue: event.fieldValue,
+        configList: this.properties.configList,
+        context: this.context 
+      } as IApproveRejectFieldProps);
 
     ReactDOM.render(approveRejectField, event.domElement);
   }
@@ -54,4 +69,19 @@ export default class ApproveRejectFieldFieldCustomizer
     ReactDOM.unmountComponentAtNode(event.domElement);
     super.onDisposeCell(event);
   }
+  private async _getListData(listTitle: string): Promise<any[]> {
+    const url = `${this.context.pageContext.web.absoluteUrl}/_api/web/lists/getbytitle('${listTitle}')/items`;
+    const response: Response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json;odata=nometadata',
+        'Content-Type': 'application/json'
+      }
+    });
+
+    const data = await response.json();
+    return data?.value || [];
+
+  }
+
 }
