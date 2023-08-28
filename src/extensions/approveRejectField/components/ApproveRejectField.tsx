@@ -79,9 +79,7 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
         ) : (
 
           <div>
-            <button className={styles.actionButton} onClick={() => { this.performAction_Click() }}>
-              <span className="ms-Button-label">Perform Action</span>
-            </button>
+            <PrimaryButton onClick={() => this.performAction_Click()} text="Perform Action" />
             {this.renderDialog()}
           </div>
         )
@@ -98,7 +96,7 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
       >
         <DialogFooter>
           <PrimaryButton onClick={() => this.approve_Click()} text="Approve" />
-          <DefaultButton onClick={() => this.reject_Click()} text="Reject" />
+          <DefaultButton onClick={() => this.reject_Click()} text="Reject" className={styles.btnReject} />
           <DefaultButton onClick={() => this.closeDialog()} text="Cancel" />
         </DialogFooter>
       </Dialog>
