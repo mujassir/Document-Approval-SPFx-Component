@@ -1,9 +1,9 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
   "solution": {
-    "name": "field-customizers-client-side-solution",
+    "name": "SPFx Approval Workflow",
     "id": "645df6cf-5fc5-49f3-b1b7-1c42b9c5e3a3",
-    "version": "1.0.0.0",
+    "version": "1.0.0.1",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,
@@ -16,10 +16,10 @@
     },
     "metadata": {
       "shortDescription": {
-        "default": "FieldCustomizers description"
+        "default": "SPFx Approval Workflow"
       },
       "longDescription": {
-        "default": "FieldCustomizers description"
+        "default": "SPFx Approval Workflow"
       },
       "screenshotPaths": [],
       "videoUrl": "",
@@ -40,6 +40,6 @@
     ]
   },
   "paths": {
-    "zippedPackage": "solution/field-customizers.sppkg"
+    "zippedPackage": "solution/SPFx-Approval-Workflow.sppkg"
   }
 }

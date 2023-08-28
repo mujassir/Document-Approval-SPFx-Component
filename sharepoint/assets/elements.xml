@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Elements xmlns="http://schemas.microsoft.com/sharepoint/">
     <Field ID="{24fa7a2a-d026-4002-89f6-350d9c618f49}"
-            Name="SPFxPercentage"
-            DisplayName="Percentage"
-            Type="Number"
+            Name="ApprovalStatus"
+            DisplayName="Approval Status"
+            Type="Text"
             Min="0"
             Required="FALSE"
             Group="SPFx Columns"

@@ -10,6 +10,7 @@ import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import "@pnp/sp/site-users/web";
 import "@pnp/sp/fields";
+import { IApproveRejectFieldProps } from './IApproveRejectFieldProps';
 
 const FSObjectTypes = {
   Folder: '1',
@@ -23,21 +24,17 @@ const dialogContentProps = {
 };
 
 
-export interface IApproveRejectFieldProps {
-  objectType: string;
-  fileRef: string;
-  itemId: number;
-  fieldValue: string;
-  configList: any;
-  context: any
-}
 
+interface IApproveRejectState {
+  ApprovalStatusValue: any; // Replace any with the appropriate type if known
+  approvalDialogHidden: boolean;
+}
 const LOG_SOURCE: string = 'ApproveRejectField';
 
 export default class ApproveRejectField extends React.Component<IApproveRejectFieldProps, {}> {
-  public state = {
-    approvalDialogHidden: true,
+  public state: IApproveRejectState = {
     ApprovalStatusValue: this.props.fieldValue,
+    approvalDialogHidden: true,
   };
 
   private _sp: SPFI;
@@ -46,9 +43,7 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
     this._sp = spfi().using(SPFx(this.props.context))
   }
 
-  public componentDidMount(): void {
-    Log.info(LOG_SOURCE, 'React Element: ApproveRejectField mounted');
-  }
+  public componentDidMount() { }
 
   public componentWillUnmount(): void {
     Log.info(LOG_SOURCE, 'React Element: ApproveRejectField unmounted');
@@ -59,16 +54,17 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
   }
 
   private renderField(): React.ReactElement<{}> {
-    const config = this.props.configList
-    const pageContext = this.props.context._pageContext._list
-    const libraryConfig = config.filter((e: any) => e.DocumentLibraryName === pageContext.title)[0] || {};
-    const folderName = this.getFolderName(this.props.fileRef)
-
-    if (folderName !== libraryConfig.FolderName) {
-      return (
-        <div></div>
-      );
+    const folderName = this.getFolderName(this.props.fileRef);
+    var drillDownLevel = this.getDrillDownLevel(this.props.fileRef);
+    if (folderName == this.props.configuration.FolderName || drillDownLevel === this.props.configuration.DrillDownLevel) {
+      return this.renderUI()
     }
+    return (
+      <div></div>
+    );
+  }
+
+  private renderUI(): React.ReactElement<{}> {
     const { ApprovalStatusValue } = this.state;
     return (
       ApprovalStatusValue == "Approved" || ApprovalStatusValue == "Rejected" ?
@@ -103,13 +99,6 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
     );
 
   }
-
-  private getFolderName(path: string): string {
-    const cleanUrl = path.replace(/\/+$/, '');
-    const token = cleanUrl.split('/');
-    return token[token.length - 2] || ""
-
-  }
   private performAction_Click() {
     this.setState({ approvalDialogHidden: false });
   }
@@ -118,24 +107,51 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
     this.setState({ approvalDialogHidden: true });
   }
   private approve_Click() {
-    this._saveValue('Approved')
+    this._saveValue(this.props.fieldName, 'Approved')
   }
 
   private reject_Click() {
-    this._saveValue('Rejected')
+    this._saveValue(this.props.fieldName, 'Rejected')
   }
 
-  private _saveValue = async (value: string): Promise<void> => {
+
+  private getFolderName(path: string): string {
+    const cleanUrl = path.replace(/\/+$/, '');
+    const tokens = cleanUrl.split('/');
+    return tokens[tokens.length - 2] || "";
+  }
+
+
+
+  private getDrillDownLevel(path: string): number {
+    if (path.indexOf("/sites/") > -1) {
+      // subsite
+      const cleanUrl = path.replace(/\/+$/, '');
+      const tokens = cleanUrl.split('/');
+      return tokens.length - 5;
+    }
+    else {
+      // root site
+      const cleanUrl = path.replace(/\/+$/, '');
+      const tokens = cleanUrl.split('/');
+      return tokens.length - 3;
+    }
+  }
+
+
+  private _saveValue = async (fieldName: string, value: string): Promise<void> => {
     try {
+
+      const properties: Record<string, any> = {};
+      properties[fieldName] = value;
       const list = this._sp.web.lists.getById(this.props.context.pageContext.list.id.toString());
       const item = list.items.getById(this.props.itemId);
-      await item.update({ ApprovalStatus: value });
+      await item.update(properties);
       this.setState({ ApprovalStatusValue: value });
       this.closeDialog();
     } catch (error) {
       console.error('Error updating list item:', error);
     }
   };
-
 
 }
