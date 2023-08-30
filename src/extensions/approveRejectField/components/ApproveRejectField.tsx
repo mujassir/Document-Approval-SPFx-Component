@@ -54,9 +54,9 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
   }
 
   private renderField(): React.ReactElement<{}> {
-    const folderName = this.getFolderName(this.props.fileRef);
+    const folderFullName = this.getFolderStructure(this.props.fileRef);
     var drillDownLevel = this.getDrillDownLevel(this.props.fileRef);
-    if (folderName == this.props.configuration.FolderName || drillDownLevel === this.props.configuration.DrillDownLevel) {
+    if (folderFullName == this.props.configuration.FolderName || drillDownLevel === this.props.configuration.DrillDownLevel) {
       return this.renderUI()
     }
     return (
@@ -115,12 +115,18 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
   }
 
 
-  private getFolderName(path: string): string {
-    const cleanUrl = path.replace(/\/+$/, '');
-    const tokens = cleanUrl.split('/');
-    return tokens[tokens.length - 2] || "";
+  private getFolderStructure(path: string): string {
+    if (path.indexOf("/sites/") > -1) {
+      const withoutFileName = path.substring(0, path.lastIndexOf('/'));
+      const tokens = withoutFileName.split('/');
+      return tokens.splice(4).join("/")
+    }
+    else{
+      const withoutFileName = path.substring(0, path.lastIndexOf('/'));
+      const tokens = withoutFileName.split('/');
+      return tokens.splice(2).join("/")
+    }
   }
-
 
 
   private getDrillDownLevel(path: string): number {
