@@ -1,73 +1,125 @@
-# field-customizers
+# Document Approval Field Customizer
 
 ## Summary
 
-Short summary on functionality and used technologies.
+A field customizer designed for SharePoint document libraries to integrate an approval workflow, leveraging Power Automate to send emails. The behavior and functionality of the field customizer can be finely tuned using a configuration list.
 
-[picture of the solution in action, if possible]
+### Figma Mockups
 
-## Used SharePoint Framework Version
+- [Approval Workflow](https://tinyurl.com/Document-Approval-Wireframe)
+- [Configuration List](https://tinyurl.com/Document-Approval-Config-List)
 
-![version](https://img.shields.io/badge/version-1.17.4-green.svg)
+## Technology Stack
 
-## Applies to
-
-- [SharePoint Framework](https://aka.ms/spfx)
-- [Microsoft 365 tenant](https://docs.microsoft.com/en-us/sharepoint/dev/spfx/set-up-your-developer-tenant)
-
-> Get your own free development tenant by subscribing to [Microsoft 365 developer program](http://aka.ms/o365devprogram)
+- SPFx (SharePoint Framework)
+- React
+- Node.js
+- Fluent UI
 
 ## Prerequisites
 
-> Any special pre-requisites?
+- Node.js installed (recommended latest LTS version)
+- SharePoint Framework development environment set up
+- Knowledge of React for any UI customizations
 
-## Solution
+## Configuration List Details
 
-| Solution    | Author(s)                                               |
-| ----------- | ------------------------------------------------------- |
-| folder name | Author details (name, company, twitter alias with link) |
+To set up the field customizer, utilize the provided configuration list. The list includes the following columns:
 
-## Version history
+- **Config Name**: The unique name for this configuration.
+- **Document Library Name**: The name of the SharePoint document library targeted.
+- **Folder Name**: Specific folder within the document library.
+- **Drill Down Level**: Depth level within folders for operation.
+- **Email Distribution List**: Email recipients for Power Automate notifications.
 
-| Version | Date             | Comments        |
-| ------- | ---------------- | --------------- |
-| 1.1     | March 10, 2021   | Update comment  |
-| 1.0     | January 29, 2021 | Initial release |
+Ensure to populate this list with the relevant data to define how the field customizer operates.
+
+## Running Locally:
+
+1. Clone this repository:
+```bash
+   git clone https://github.com/mujassir/Document-Approval-SPFx-Component.git
+```
+2. Navigate to the solution folder:
+```bash
+   cd Document-Approval-SPFx-Component
+```
+3. Install the dependencies:
+```bash
+   npm install
+```
+4. Update the page URL and column name to test in the development environment
+```bash
+   "serveConfigurations": {
+    "default": {
+      "pageUrl": "https://{Your SharePoint Environment}/sites/SharePointDevelopers/DocumentLibrary/Forms/AllItems.aspx",
+      "fieldCustomizers": {
+        "ApprovalStatusDev": {
+//ApprovalStatusDev is the column on which the customizer field will be rendered/applied when served
+// Column "ApprovalStatusDev" could be any name that exist in the DocumentLibrary
+
+          "id": "df0e4e1c-b9a1-447f-8ba2-f18db13c02b0",
+          "properties": {
+            "sampleText": "Value"
+          }
+        }
+      }
+    },
+```
+5. To test and see your changes in SharePoint Workbench:
+```bash
+   gulp serve
+```
+
+6. 
+
+
+Then, upload the generated `.sppkg` file to the SharePoint App Catalog.
+
+## Package Deployment Guide
+
+### Prepare .sppkg package file
+For deploying to a SharePoint tenant, bundle and package the solution:
+```bash
+  gulp build
+  gulp bundle --ship
+  gulp package-solution --ship
+```
+### Installing the .sppkg package to the SharePoint environment
+
+1. **Open SharePoint Admin Center**: Navigate to your SharePoint Admin Center. The URL typically looks like `https://[your-tenant-name]-admin.sharepoint.com`.
+2. **Access the App Catalog**: In the left-hand navigation, locate and select **Apps** and then choose **App Catalog**.
+3. **Upload the package**: Once in the App Catalog, select **Distribute apps for SharePoint**. From there, click on **New** to upload a new app. Browse to your `.sppkg` file and select to upload. You will be prompted to trust the client-side solution to deploy. Click **Deploy**.
+
+### Adding the Installed App to a SharePoint Site
+
+1. **Navigate to your target site**: Go to the SharePoint site where you want to add the app.
+2. **Access Site Contents**: From the site homepage, click on the settings/gear icon at the top right corner, then select **Site contents**.
+3. **Add an App**: In the site contents page, click on **+ New** and choose **App**.
+4. **Install the App**: You'll see a library of available apps. Look for your app (it'll be named after your solution) and click on it. Follow the on-screen prompts to add and install the app on your site.
+
+### Adding the Custom Column in the Document Library
+
+1. **Access your Document Library**: Navigate to the document library or list where you wish to add the custom column.
+2. **Go to List Settings**: From the Site Contents page, click on the ellipsis (`...`) next to your list or library and select **Settings** from the dropdown menu.
+3. **Add from Existing Site Columns**: Navigate to **Columns** and select **Add from existing site columns**.
+4. **Choose the Custom Column**: 
+   - Under the **Select site columns from** dropdown, choose **SPFx Columns**.
+   - From the available columns, locate and select the **ApprovalStatus** field that was provisioned from the solution package.
+5. **Confirm the Addition**: Click **OK** to finalize adding the column to your document library.
+
+> **Note**: Custom columns added from a SharePoint Framework (SPFx) solution, like the `ApprovalStatus` column, typically provide enhanced features or visualizations compared to native SharePoint columns. Ensure you have the necessary permissions and have properly deployed the SPFx solution to make these columns available for adding.
+
+
+
+## Features
+
+- **Approval Workflow Integration**: Seamlessly integrate an approval process into SharePoint document libraries.
+- **Power Automate Emailing**: Automated email notifications triggered by Power Automate.
+- **Granular Customization**: Define behaviors using a dedicated configuration list.
+- **Fluent UI Integration**: A modern and intuitive UI for better user experience.
 
 ## Disclaimer
 
 **THIS CODE IS PROVIDED _AS IS_ WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
 
----
-
-## Minimal Path to Awesome
-
-- Clone this repository
-- Ensure that you are at the solution folder
-- in the command-line run:
-  - **npm install**
-  - **gulp serve**
-
-> Include any additional steps as needed.
-
-## Features
-
-Description of the extension that expands upon high-level summary above.
-
-This extension illustrates the following concepts:
-
-- topic 1
-- topic 2
-- topic 3
-
-> Notice that better pictures and documentation will increase the sample usage and the value you are providing for others. Thanks for your submissions advance.
-
-> Share your web part with others through Microsoft 365 Patterns and Practices program to get visibility and exposure. More details on the community, open-source projects and other activities from http://aka.ms/m365pnp.
-
-## References
-
-- [Getting started with SharePoint Framework](https://docs.microsoft.com/en-us/sharepoint/dev/spfx/set-up-your-developer-tenant)
-- [Building for Microsoft teams](https://docs.microsoft.com/en-us/sharepoint/dev/spfx/build-for-teams-overview)
-- [Use Microsoft Graph in your solution](https://docs.microsoft.com/en-us/sharepoint/dev/spfx/web-parts/get-started/using-microsoft-graph-apis)
-- [Publish SharePoint Framework applications to the Marketplace](https://docs.microsoft.com/en-us/sharepoint/dev/spfx/publish-to-marketplace-overview)
-- [Microsoft 365 Patterns and Practices](https://aka.ms/m365pnp) - Guidance, tooling, samples and open-source controls for your Microsoft 365 development
