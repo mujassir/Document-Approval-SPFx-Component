@@ -64,7 +64,7 @@ To set up the field customizer, utilize the provided configuration list. The lis
 
 Ensure to populate this list with the relevant data to define how the field customizer operates.
 
-## Running Locally:
+## Running Locally
 
 1. Clone this repository:
 ```bash
