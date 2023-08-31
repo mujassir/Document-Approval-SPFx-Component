@@ -71,11 +71,6 @@ Ensure to populate this list with the relevant data to define how the field cust
    gulp serve
 ```
 
-6. 
-
-
-Then, upload the generated `.sppkg` file to the SharePoint App Catalog.
-
 ## Package Deployment Guide
 
 ### Prepare .sppkg package file
