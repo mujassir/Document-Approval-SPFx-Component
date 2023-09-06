@@ -51,7 +51,16 @@ export default class ApproveRejectFieldFieldCustomizer
     const configData: IConfigItem = this.properties.configList.filter((e: IConfigItem) => e.DocumentLibraryName === libraryName)[0] || { FolderName: '', DrillDownLevel: 0, DocumentLibraryName: '' };
 
     const creatorField = event.listItem.getValueByName("Author");
+    let creatorBy;
 
+    if (creatorField && creatorField.length > 0) {
+      creatorBy = creatorField[0]
+    } else {
+      creatorBy = {
+        title: null,
+        email: null
+      }
+    }
     const approveRejectField: React.ReactElement<{}> =
       React.createElement(ApproveRejectField, {
         objectType,
@@ -64,7 +73,7 @@ export default class ApproveRejectFieldFieldCustomizer
         context: this.context,
         listItem: event.listItem,
         siteURL: this.context.pageContext.site.absoluteUrl,
-        creator: creatorField[0] || {},
+        creator: creatorBy,
       } as IApproveRejectFieldProps);
 
     ReactDOM.render(approveRejectField, event.domElement);
