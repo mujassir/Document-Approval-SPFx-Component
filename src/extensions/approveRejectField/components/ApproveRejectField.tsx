@@ -36,7 +36,6 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
     ApprovalStatusValue: this.props.fieldValue,
     approvalDialogHidden: true,
   };
-
   private _sp: SPFI;
   constructor(props: IApproveRejectFieldProps) {
     super(props);
@@ -111,7 +110,19 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
   }
 
   private reject_Click() {
-    this._saveValue(this.props.fieldName, 'Rejected')
+    const payload = {
+      LibraryName: this.props.configuration.DocumentLibraryName,
+      FileName: this.props.FileName,
+      FileURL: this.props.fileRef,
+      CreatorName: this.props.creator.title,
+      CreatorEmail: this.props.creator.email,
+      EditByName: this.props.context.pageContext.user.displayName,
+      EditByEmail: this.props.context.pageContext.user.email,
+      ApprovalStatus: "Rejected"
+    }
+    this.postDataToApi(this.props.configuration.EmailEndpoint, payload);
+
+    // this._saveValue(this.props.fieldName, 'Rejected')
   }
 
 
@@ -121,7 +132,7 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
       const tokens = withoutFileName.split('/');
       return tokens.splice(4).join("/")
     }
-    else{
+    else {
       const withoutFileName = path.substring(0, path.lastIndexOf('/'));
       const tokens = withoutFileName.split('/');
       return tokens.splice(2).join("/")
@@ -159,5 +170,23 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
       console.error('Error updating list item:', error);
     }
   };
+
+  private async postDataToApi(url: string, payload: any) {
+    try {
+      const response: Response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: {
+          'Accept': 'application/json;odata=nometadata',
+          'Content-Type': 'application/json'
+        },
+      });
+      const data = await response.json();
+      console.log(data);
+
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
 
 }

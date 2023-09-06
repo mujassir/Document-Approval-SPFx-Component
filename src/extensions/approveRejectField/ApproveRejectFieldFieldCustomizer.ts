@@ -31,7 +31,7 @@ export default class ApproveRejectFieldFieldCustomizer
   extends BaseFieldCustomizer<IApproveRejectFieldFieldCustomizerProperties> {
 
   public async onInit(): Promise<void> {
-    this.properties.configList  = await this._getConfigData(CONFIG_LIST_TITLE);
+    this.properties.configList = await this._getConfigData(CONFIG_LIST_TITLE);
 
     // Add your custom initialization to this method.  The framework will wait
     // for the returned promise to resolve before firing any BaseFieldCustomizer events.
@@ -46,20 +46,25 @@ export default class ApproveRejectFieldFieldCustomizer
     const fileRef = event.listItem.getValueByName("FileRef");
     const objectType = event.listItem.getValueByName("FSObjType");
     const listItemId = event.listItem.getValueByName("ID");
+    const FileName = event.listItem.getValueByName("FileLeafRef");
     const libraryName = this.getLibraryName(fileRef);
     const configData: IConfigItem = this.properties.configList.filter((e: IConfigItem) => e.DocumentLibraryName === libraryName)[0] || { FolderName: '', DrillDownLevel: 0, DocumentLibraryName: '' };
 
+    const creatorField = event.listItem.getValueByName("Author");
+
     const approveRejectField: React.ReactElement<{}> =
-      React.createElement(ApproveRejectField, { 
+      React.createElement(ApproveRejectField, {
         objectType,
         itemId: listItemId,
         fileRef: fileRef,
+        FileName: FileName,
         fieldValue: event.fieldValue,
         fieldName: this.context.field.internalName,
         configuration: configData,
         context: this.context,
         listItem: event.listItem,
-        siteURL: this.context.pageContext.site.absoluteUrl
+        siteURL: this.context.pageContext.site.absoluteUrl,
+        creator: creatorField[0] || {},
       } as IApproveRejectFieldProps);
 
     ReactDOM.render(approveRejectField, event.domElement);
@@ -87,7 +92,7 @@ export default class ApproveRejectFieldFieldCustomizer
       return tokens[1];
     }
   }
-  
+
   private async _getConfigData(configListTitle: string): Promise<any[]> {
 
     // Create a unique key for the session storage based on the list title and library name.
@@ -111,7 +116,7 @@ export default class ApproveRejectFieldFieldCustomizer
     });
     const data = await response.json();
     const configList = data?.value || [];
-    
+
     // Store the fetched data in session storage for future use
     sessionStorage.setItem(storageKey, JSON.stringify(configList));
 
