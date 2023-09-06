@@ -36,7 +36,6 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
     ApprovalStatusValue: this.props.fieldValue,
     approvalDialogHidden: true,
   };
-
   private _sp: SPFI;
   constructor(props: IApproveRejectFieldProps) {
     super(props);
@@ -111,7 +110,19 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
   }
 
   private reject_Click() {
-    this._saveValue(this.props.fieldName, 'Rejected')
+    const payload = {
+      LibraryName: this.props.configuration.DocumentLibraryName,
+      FileName: this.props.FileName,
+      FileURL: this.props.fileRef,
+      CreatorName: this.props.creator.title,
+      CreatorEmail: this.props.creator.email,
+      // EditByName: this.props.context.pageContext.user.displayName,
+      // EditByEmail: this.props.context.pageContext.user.email,
+      ApprovalStatus: "Rejected"
+    }
+    this.postDataToApi(payload);
+
+    // this._saveValue(this.props.fieldName, 'Rejected')
   }
 
 
@@ -121,7 +132,7 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
       const tokens = withoutFileName.split('/');
       return tokens.splice(4).join("/")
     }
-    else{
+    else {
       const withoutFileName = path.substring(0, path.lastIndexOf('/'));
       const tokens = withoutFileName.split('/');
       return tokens.splice(2).join("/")
@@ -159,5 +170,24 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
       console.error('Error updating list item:', error);
     }
   };
+
+  private async postDataToApi(payload: any) {
+    try {
+      const url = `https://prod-108.westus.logic.azure.com:443/workflows/def26dec4ab446288a6e3bcafdac3247/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Rw31kT6odedVLlpHY_PwJcjK5Wovxbaw6DpLoHZW3g8`;
+      const response: Response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: {
+          'Accept': 'application/json;odata=nometadata',
+          'Content-Type': 'application/json'
+        },
+      });
+      const data = await response.json();
+      console.log(data);
+
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
 
 }
