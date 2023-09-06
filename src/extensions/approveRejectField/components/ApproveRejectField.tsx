@@ -122,7 +122,7 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
     }
     this.postDataToApi(this.props.configuration.EmailEndpoint, payload);
 
-    // this._saveValue(this.props.fieldName, 'Rejected')
+     this._saveValue(this.props.fieldName, 'Rejected')
   }
 
 
