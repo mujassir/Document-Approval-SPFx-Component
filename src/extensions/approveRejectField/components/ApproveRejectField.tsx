@@ -116,11 +116,11 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
       FileURL: this.props.fileRef,
       CreatorName: this.props.creator.title,
       CreatorEmail: this.props.creator.email,
-      // EditByName: this.props.context.pageContext.user.displayName,
-      // EditByEmail: this.props.context.pageContext.user.email,
+      EditByName: this.props.context.pageContext.user.displayName,
+      EditByEmail: this.props.context.pageContext.user.email,
       ApprovalStatus: "Rejected"
     }
-    this.postDataToApi(payload);
+    this.postDataToApi(this.props.configuration.EmailEndpoint, payload);
 
     // this._saveValue(this.props.fieldName, 'Rejected')
   }
@@ -171,9 +171,8 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
     }
   };
 
-  private async postDataToApi(payload: any) {
+  private async postDataToApi(url: string, payload: any) {
     try {
-      const url = `https://prod-108.westus.logic.azure.com:443/workflows/def26dec4ab446288a6e3bcafdac3247/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Rw31kT6odedVLlpHY_PwJcjK5Wovxbaw6DpLoHZW3g8`;
       const response: Response = await fetch(url, {
         method: 'POST',
         body: JSON.stringify(payload),
