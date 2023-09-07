@@ -118,7 +118,8 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
       CreatorEmail: this.props.creator.email,
       EditByName: this.props.context.pageContext.user.displayName,
       EditByEmail: this.props.context.pageContext.user.email,
-      ApprovalStatus: "Rejected"
+      SiteTitle: this.props.context.pageContext.web.title,
+      ApprovalStatus: "Rejected",
     }
     this.postDataToApi(this.props.configuration.EmailEndpoint, payload);
 
