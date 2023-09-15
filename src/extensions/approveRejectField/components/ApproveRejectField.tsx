@@ -55,7 +55,7 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
   private renderField(): React.ReactElement<{}> {
     const folderFullName = this.getFolderStructure(this.props.fileRef);
     var drillDownLevel = this.getDrillDownLevel(this.props.fileRef);
-    if (folderFullName == this.props.configuration.FolderName || drillDownLevel === this.props.configuration.DrillDownLevel) {
+    if (folderFullName == this.props.configuration.FolderName || drillDownLevel >= this.props.configuration.DrillDownLevel) {
       return this.renderUI()
     }
     return (
@@ -118,8 +118,7 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
       CreatorEmail: this.props.creator.email,
       EditByName: this.props.context.pageContext.user.displayName,
       EditByEmail: this.props.context.pageContext.user.email,
-      SiteTitle: this.props.context.pageContext.web.title,
-      SiteURL: this.props.context.pageContext.web.absoluteUrl,
+      SiteTitle: this.props.context.pageContext.web.absoluteUrl,
       ApprovalStatus: "Rejected",
     }
     this.postDataToApi(this.props.configuration.EmailEndpoint, payload);
