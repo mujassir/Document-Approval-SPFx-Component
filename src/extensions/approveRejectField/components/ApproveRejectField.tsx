@@ -4,6 +4,7 @@ import * as React from 'react';
 import styles from './ApproveRejectField.module.scss';
 import Dialog, { DialogFooter, DialogType } from 'office-ui-fabric-react/lib/Dialog';
 import { DefaultButton, PrimaryButton } from 'office-ui-fabric-react/lib/Button';
+import { TextField } from 'office-ui-fabric-react';
 import { SPFI, spfi, SPFx } from '@pnp/sp';
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
@@ -23,11 +24,17 @@ const dialogContentProps = {
   subText: 'Are you sure you want to approve or reject this document?',
 };
 
-
+const rejectRemarksDialogContentProps = {
+  type: DialogType.normal,
+  title: 'Document Reject Remarks',
+  closeButtonAriaLabel: 'Close',
+};
 
 interface IApproveRejectState {
   ApprovalStatusValue: any; // Replace any with the appropriate type if known
   approvalDialogHidden: boolean;
+  rejectRemarksDialogHidden: boolean;
+  rejectRemarksField: string;
 }
 const LOG_SOURCE: string = 'ApproveRejectField';
 
@@ -35,6 +42,8 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
   public state: IApproveRejectState = {
     ApprovalStatusValue: this.props.fieldValue,
     approvalDialogHidden: true,
+    rejectRemarksDialogHidden: true,
+    rejectRemarksField: ''
   };
   private _sp: SPFI;
   constructor(props: IApproveRejectFieldProps) {
@@ -76,6 +85,7 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
           <div>
             <PrimaryButton onClick={() => this.performAction_Click()} text="Perform Action" />
             {this.renderDialog()}
+            {this.renderRejectRemarksDialog()}
           </div>
         )
     );
@@ -98,6 +108,27 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
     );
 
   }
+  private renderRejectRemarksDialog(): React.ReactElement<{}> {
+    return (
+      <Dialog
+        hidden={this.state.rejectRemarksDialogHidden}
+        onDismiss={this.closeRemarksDialog}
+        dialogContentProps={rejectRemarksDialogContentProps}
+      >
+        <TextField
+          label="Enter your remarks..."
+          required={true}
+          value={this.state.rejectRemarksField}
+          onChange={(event, val) => this.setState({ rejectRemarksField: val })}
+        />
+        <DialogFooter>
+          <DefaultButton onClick={() => this.rejectRemarks_Click()} text="Reject" className={styles.btnReject} />
+          <DefaultButton onClick={() => this.closeRemarksDialog()} text="Cancel" />
+        </DialogFooter>
+      </Dialog>
+    );
+
+  }
   private performAction_Click() {
     this.setState({ approvalDialogHidden: false });
   }
@@ -105,11 +136,17 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
   private closeDialog() {
     this.setState({ approvalDialogHidden: true });
   }
+  private closeRemarksDialog() {
+    this.setState({ rejectRemarksDialogHidden: true });
+  }
   private approve_Click() {
     this._saveValue(this.props.fieldName, 'Approved')
   }
-
   private reject_Click() {
+    this.closeDialog();
+    this.setState({ rejectRemarksDialogHidden: false });
+  }
+  private rejectRemarks_Click() {
     const payload = {
       LibraryName: this.props.configuration.DocumentLibraryName,
       FileName: this.props.FileName,
@@ -119,11 +156,11 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
       EditByName: this.props.context.pageContext.user.displayName,
       EditByEmail: this.props.context.pageContext.user.email,
       SiteTitle: this.props.context.pageContext.web.absoluteUrl,
+      RejectRemarks: this.state.rejectRemarksField,
       ApprovalStatus: "Rejected",
     }
     this.postDataToApi(this.props.configuration.EmailEndpoint, payload);
-
-     this._saveValue(this.props.fieldName, 'Rejected')
+    this._saveValue(this.props.fieldName, 'Rejected')
   }
 
 
@@ -167,6 +204,7 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
       await item.update(properties);
       this.setState({ ApprovalStatusValue: value });
       this.closeDialog();
+      this.closeRemarksDialog();
     } catch (error) {
       console.error('Error updating list item:', error);
     }
