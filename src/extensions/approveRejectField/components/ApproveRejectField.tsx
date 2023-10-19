@@ -117,7 +117,9 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
       >
         <TextField
           label="Enter your remarks..."
-          required={true}
+          required={true} 
+          multiline 
+          rows={5}
           value={this.state.rejectRemarksField}
           onChange={(event, val) => this.setState({ rejectRemarksField: val })}
         />
