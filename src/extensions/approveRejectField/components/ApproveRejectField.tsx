@@ -117,8 +117,8 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
       >
         <TextField
           label="Enter your remarks..."
-          required={true} 
-          multiline 
+          required={true}
+          multiline
           rows={5}
           value={this.state.rejectRemarksField}
           onChange={(event, val) => this.setState({ rejectRemarksField: val })}
@@ -142,27 +142,37 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
     this.setState({ rejectRemarksDialogHidden: true });
   }
   private approve_Click() {
-    this._saveValue(this.props.fieldName, 'Approved')
+    this._saveValue({ [this.props.fieldName]: 'Approved' })
+    this.setState({ ApprovalStatusValue: 'Approved' })
   }
   private reject_Click() {
     this.closeDialog();
     this.setState({ rejectRemarksDialogHidden: false });
   }
-  private rejectRemarks_Click() {
-    const payload = {
-      LibraryName: this.props.configuration.DocumentLibraryName,
-      FileName: this.props.FileName,
-      FileURL: this.props.fileRef,
-      CreatorName: this.props.creator.title,
-      CreatorEmail: this.props.creator.email,
-      EditByName: this.props.context.pageContext.user.displayName,
-      EditByEmail: this.props.context.pageContext.user.email,
-      SiteTitle: this.props.context.pageContext.web.absoluteUrl,
-      RejectRemarks: this.state.rejectRemarksField,
-      ApprovalStatus: "Rejected",
+  private async rejectRemarks_Click() {
+    // const payload = {
+    //   LibraryName: this.props.configuration.DocumentLibraryName,
+    //   FileName: this.props.FileName,
+    //   FileURL: this.props.fileRef,
+    //   CreatorName: this.props.creator.title,
+    //   CreatorEmail: this.props.creator.email,
+    //   EditByName: this.props.context.pageContext.user.displayName,
+    //   EditByEmail: this.props.context.pageContext.user.email,
+    //   SiteTitle: this.props.context.pageContext.web.absoluteUrl,
+    //   RejectRemarks: this.state.rejectRemarksField,
+    //   ApprovalStatus: "Rejected",
+    // }
+    // this.postDataToApi(this.props.configuration.EmailEndpoint, payload);
+    const pyaload = {
+      [this.props.fieldName]: 'Rejected',
+      ItemDescription: this.state.rejectRemarksField
     }
-    this.postDataToApi(this.props.configuration.EmailEndpoint, payload);
-    this._saveValue(this.props.fieldName, 'Rejected')
+    const res = await this._saveValue(pyaload)
+    if (res) {
+      this.setState({ ApprovalStatusValue: 'Rejected' })
+      this.setState({ ItemDescription: this.state.rejectRemarksField })
+      location.reload();
+    }
   }
 
 
@@ -196,38 +206,38 @@ export default class ApproveRejectField extends React.Component<IApproveRejectFi
   }
 
 
-  private _saveValue = async (fieldName: string, value: string): Promise<void> => {
+  private _saveValue = async (payload: any): Promise<boolean> => {
     try {
 
-      const properties: Record<string, any> = {};
-      properties[fieldName] = value;
+      const properties: Record<string, any> = payload;
       const list = this._sp.web.lists.getById(this.props.context.pageContext.list.id.toString());
       const item = list.items.getById(this.props.itemId);
       await item.update(properties);
-      this.setState({ ApprovalStatusValue: value });
       this.closeDialog();
       this.closeRemarksDialog();
+      return true;
     } catch (error) {
       console.error('Error updating list item:', error);
+      return false;
     }
   };
 
-  private async postDataToApi(url: string, payload: any) {
-    try {
-      const response: Response = await fetch(url, {
-        method: 'POST',
-        body: JSON.stringify(payload),
-        headers: {
-          'Accept': 'application/json;odata=nometadata',
-          'Content-Type': 'application/json'
-        },
-      });
-      const data = await response.json();
-      console.log(data);
+  // private async postDataToApi(url: string, payload: any) {
+  //   try {
+  //     const response: Response = await fetch(url, {
+  //       method: 'POST',
+  //       body: JSON.stringify(payload),
+  //       headers: {
+  //         'Accept': 'application/json;odata=nometadata',
+  //         'Content-Type': 'application/json'
+  //       },
+  //     });
+  //     const data = await response.json();
+  //     console.log(data);
 
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  }
+  //   } catch (error) {
+  //     console.error('Error:', error);
+  //   }
+  // }
 
 }

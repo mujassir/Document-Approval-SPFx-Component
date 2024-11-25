@@ -3,7 +3,7 @@
   "solution": {
     "name": "SPFx Approval Workflow",
     "id": "645df6cf-5fc5-49f3-b1b7-1c42b9c5e3a3",
-    "version": "1.0.0.14",
+    "version": "1.0.1.1",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,
